@@ -1,0 +1,163 @@
+{
+  "message": "canwe be able to add on the groping of the porejct type we add the porejct naem",
+  "context": {
+    "user_is_viewing": [
+      {
+        "type": "adhoc",
+        "query": {
+          "database": 20,
+          "type": "query",
+          "query": {
+            "source-table": 1782,
+            "joins": [
+              {
+                "fields": "all",
+                "strategy": "left-join",
+                "alias": "Weris Poject Type - Project Type",
+                "condition": [
+                  "=",
+                  [
+                    "field",
+                    19344,
+                    {
+                      "base-type": "type/Integer"
+                    }
+                  ],
+                  [
+                    "field",
+                    19303,
+                    {
+                      "base-type": "type/Integer",
+                      "join-alias": "Weris Poject Type - Project Type"
+                    }
+                  ]
+                ],
+                "source-table": 1805
+              }
+            ],
+            "aggregation": [["count"]],
+            "order-by": [
+              [
+                "desc",
+                [
+                  "aggregation",
+                  0,
+                  {
+                    "base-type": "type/Integer"
+                  }
+                ]
+              ]
+            ],
+            "breakout": [
+              [
+                "field",
+                19302,
+                {
+                  "base-type": "type/Text",
+                  "join-alias": "Weris Poject Type - Project Type"
+                }
+              ]
+            ]
+          }
+        },
+        "chart_configs": [
+          {
+            "image_base_64": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDE1IiBoZWlnaHQ9IjYzNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBiYXNlUHJvZmlsZT0iZnVsbCIgc3R5bGU9InBvc2l0aW9uOiBhYnNvbHV0ZTsgbGVmdDogMHB4OyB0b3A6IDBweDsgdXNlci1zZWxlY3Q6IG5vbmU7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiPjxyZWN0IHdpZHRoPSI0MTUiIGhlaWdodD0iNjM2IiB4PSIwIiB5PSIwIiBmaWxsPSJub25lIi8+PGc+PHBhdGggZD0iTTU1LjkyMDEgNDA3LjVMNDA3IDQwNy41IiBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJ2YXIoLS1tYi1jb2xvci1ib3JkZXIpIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHBhdGggZD0iTTU1LjkyMDEgMzQxLjVMNDA3IDM0MS41IiBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJ2YXIoLS1tYi1jb2xvci1ib3JkZXIpIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHBhdGggZD0iTTU1LjkyMDEgMjc1LjVMNDA3IDI3NS41IiBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJ2YXIoLS1tYi1jb2xvci1ib3JkZXIpIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHBhdGggZD0iTTU1LjkyMDEgMjA5LjVMNDA3IDIwOS41IiBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJ2YXIoLS1tYi1jb2xvci1ib3JkZXIpIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHBhdGggZD0iTTU1LjkyMDEgMTQ0LjVMNDA3IDE0NC41IiBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJ2YXIoLS1tYi1jb2xvci1ib3JkZXIpIiBzdHJva2UtZGFzaGFycmF5PSI1Ii8+PHBhdGggZD0iTTU1LjkyMDEgNzguNUw0MDcgNzguNSIgZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0idmFyKC0tbWItY29sb3ItYm9yZGVyKSIgc3Ryb2tlLWRhc2hhcnJheT0iNSIvPjxwYXRoIGQ9Ik01NS45MjAxIDEyLjVMNDA3IDEyLjUiIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9InZhcigtLW1iLWNvbG9yLWJvcmRlcikiIHN0cm9rZS1kYXNoYXJyYXk9IjUiLz48dGV4dCBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeT0iLTYuMDAwMDQ1Nzc2MzY3MTg3NSIgdHJhbnNmb3JtPSJtYXRyaXgoMCwtMSwxLDAsMjAsMjA5LjY2NTMpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij5OdW1iZXIgb2YgUHJvamVjdHM8L3RleHQ+PHBhdGggZD0iTTU1LjkyMDEgNDA3LjVMNDA3IDQwNy41IiBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSIjRUVFQ0VDIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48dGV4dCBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeT0iNi4wMDAwNDU3NzYzNjcxODc1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMzEuNDYwMSA2MTgpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij5Qcm9qZWN0cyBieSBUeXBlPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0NS45MjAxIDQwNy4zMzA2KSIgZmlsbD0iIzRDNTc3MyIgc3R5bGU9ImZvbnQtc2l6ZTogMTJweDsgZm9udC1mYW1pbHk6IExhdG8sIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyI+MDwvdGV4dD48dGV4dCBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9ImVuZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDUuOTIwMSAzNDEuNDQyMSkiIGZpbGw9IiM0QzU3NzMiIHN0eWxlPSJmb250LXNpemU6IDEycHg7IGZvbnQtZmFtaWx5OiBMYXRvLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC13ZWlnaHQ6IDcwMDsiPjEwPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0NS45MjAxIDI3NS41NTM3KSIgZmlsbD0iIzRDNTc3MyIgc3R5bGU9ImZvbnQtc2l6ZTogMTJweDsgZm9udC1mYW1pbHk6IExhdG8sIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyI+MjA8L3RleHQ+PHRleHQgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJlbmQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQ1LjkyMDEgMjA5LjY2NTMpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij4zMDwvdGV4dD48dGV4dCBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9ImVuZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDUuOTIwMSAxNDMuNzc2OSkiIGZpbGw9IiM0QzU3NzMiIHN0eWxlPSJmb250LXNpemU6IDEycHg7IGZvbnQtZmFtaWx5OiBMYXRvLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC13ZWlnaHQ6IDcwMDsiPjQwPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0NS45MjAxIDc3Ljg4ODQpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij41MDwvdGV4dD48dGV4dCBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgdGV4dC1hbmNob3I9ImVuZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDUuOTIwMSAxMikiIGZpbGw9IiM0QzU3NzMiIHN0eWxlPSJmb250LXNpemU6IDEycHg7IGZvbnQtZmFtaWx5OiBMYXRvLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC13ZWlnaHQ6IDcwMDsiPjYwPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjcwNywtMC43MDcsMC43MDcsMC43MDcsODAuOTk3Miw0MTIuMzMwNikiIGZpbGw9IiM0QzU3NzMiIHN0eWxlPSJmb250LXNpemU6IDEycHg7IGZvbnQtZmFtaWx5OiBMYXRvLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC13ZWlnaHQ6IDcwMDsiPiBTb2Z0d2FyZSBBcHBsaWNhdGlvbiA8L3RleHQ+PHRleHQgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJlbmQiIHhtbDpzcGFjZT0icHJlc2VydmUiIHRyYW5zZm9ybT0ibWF0cml4KDAuNzA3LC0wLjcwNywwLjcwNywwLjcwNywxMzEuMTUxNSw0MTIuMzMwNikiIGZpbGw9IiM0QzU3NzMiIHN0eWxlPSJmb250LXNpemU6IDEycHg7IGZvbnQtZmFtaWx5OiBMYXRvLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC13ZWlnaHQ6IDcwMDsiPiBBcnRpZmljaWFsIEludGVsbGlnZW5jZSBhbmQgTWFjaGluZSBMZWFybmluZyhBSS9NTCkgPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjcwNywtMC43MDcsMC43MDcsMC43MDcsMTgxLjMwNTgsNDEyLjMzMDYpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij4gQmxvY2tjaGFpbiA8L3RleHQ+PHRleHQgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJlbmQiIHhtbDpzcGFjZT0icHJlc2VydmUiIHRyYW5zZm9ybT0ibWF0cml4KDAuNzA3LC0wLjcwNywwLjcwNywwLjcwNywyMzEuNDYwMSw0MTIuMzMwNikiIGZpbGw9IiM0QzU3NzMiIHN0eWxlPSJmb250LXNpemU6IDEycHg7IGZvbnQtZmFtaWx5OiBMYXRvLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC13ZWlnaHQ6IDcwMDsiPiBJT1QgPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjcwNywtMC43MDcsMC43MDcsMC43MDcsMjgxLjYxNDMsNDEyLjMzMDYpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij4gU2VjdXJpdHkgPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjcwNywtMC43MDcsMC43MDcsMC43MDcsMzMxLjc2ODYsNDEyLjMzMDYpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij4gSW5mcmFzdHJ1Y3R1cmUgPC90ZXh0Pjx0ZXh0IGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIiB0ZXh0LWFuY2hvcj0iZW5kIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjcwNywtMC43MDcsMC43MDcsMC43MDcsMzgxLjkyMjksNDEyLjMzMDYpIiBmaWxsPSIjNEM1NzczIiBzdHlsZT0iZm9udC1zaXplOiAxMnB4OyBmb250LWZhbWlseTogTGF0bywgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtd2VpZ2h0OiA3MDA7Ij4gUGFwZXIgUmVzZWFyY2ggPC90ZXh0PjxwYXRoIGQ9Ik02My42OTQgNDA3LjMzMDZsMzQuNjA2NCAwbDAgLTM2Mi4zODYzbC0zNC42MDY0IDBaIiBmaWxsPSIjNTA5RUUzIi8+PHBhdGggZD0iTTExMy44NDgzIDQwNy4zMzA2bDM0LjYwNjQgMGwwIC0xMTguNTk5MmwtMzQuNjA2NCAwWiIgZmlsbD0iIzUwOUVFMyIvPjxwYXRoIGQ9Ik0xNjQuMDAyNiA0MDcuMzMwNmwzNC42MDY0IDBsMCAtODUuNjU1bC0zNC42MDY0IDBaIiBmaWxsPSIjNTA5RUUzIi8+PHBhdGggZD0iTTIxNC4xNTY4IDQwNy4zMzA2bDM0LjYwNjQgMGwwIC02NS44ODg0bC0zNC42MDY0IDBaIiBmaWxsPSIjNTA5RUUzIi8+PHBhdGggZD0iTTI2NC4zMTExIDQwNy4zMzA2bDM0LjYwNjQgMGwwIC02NS44ODg0bC0zNC42MDY0IDBaIiBmaWxsPSIjNTA5RUUzIi8+PHBhdGggZD0iTTMxNC40NjU0IDQwNy4zMzA2bDM0LjYwNjQgMGwwIC0xOS43NjY1bC0zNC42MDY0IDBaIiBmaWxsPSIjNTA5RUUzIi8+PHBhdGggZD0iTTM2NC42MTk2IDQwNy4zMzA2bDM0LjYwNjQgMGwwIC0xOS43NjY1bC0zNC42MDY0IDBaIiBmaWxsPSIjNTA5RUUzIi8+PC9nPjwvc3ZnPg==",
+            "series": {
+              "Count": {
+                "x": {
+                  "name": "project_type_name",
+                  "type": "string"
+                },
+                "y": {
+                  "name": "count",
+                  "type": "number"
+                },
+                "x_values": [
+                  "Software Application",
+                  "Artificial Intelligence and Machine Learning(AI/ML)",
+                  "Blockchain",
+                  "IOT",
+                  "Security",
+                  "Infrastructure",
+                  "Paper Research"
+                ],
+                "y_values": [55, 18, 13, 10, 10, 3, 3],
+                "display_name": "Count",
+                "chart_type": "bar",
+                "stacked": false
+              }
+            },
+            "timeline_events": [],
+            "query": {
+              "database": 20,
+              "type": "query",
+              "query": {
+                "source-table": 1782,
+                "joins": [
+                  {
+                    "fields": "all",
+                    "strategy": "left-join",
+                    "alias": "Weris Poject Type - Project Type",
+                    "condition": [
+                      "=",
+                      [
+                        "field",
+                        19344,
+                        {
+                          "base-type": "type/Integer"
+                        }
+                      ],
+                      [
+                        "field",
+                        19303,
+                        {
+                          "base-type": "type/Integer",
+                          "join-alias": "Weris Poject Type - Project Type"
+                        }
+                      ]
+                    ],
+                    "source-table": 1805
+                  }
+                ],
+                "aggregation": [["count"]],
+                "order-by": [
+                  [
+                    "desc",
+                    [
+                      "aggregation",
+                      0,
+                      {
+                        "base-type": "type/Integer"
+                      }
+                    ]
+                  ]
+                ],
+                "breakout": [
+                  [
+                    "field",
+                    19302,
+                    {
+                      "base-type": "type/Text",
+                      "join-alias": "Weris Poject Type - Project Type"
+                    }
+                  ]
+                ]
+              }
+            },
+            "display_type": "bar"
+          }
+        ]
+      }
+    ],
+    "current_time_with_timezone": "2025-10-10T10:41:39+03:00",
+    "capabilities": [
+      "frontend:navigate_user_v1",
+      "permission:save_questions",
+      "permission:write_sql_queries"
+    ]
+  },
+  "state": {},
+  "history": [],
+  "conversation_id": "b36c222e-24fa-0c67-66db-b71d440419ab"
+}

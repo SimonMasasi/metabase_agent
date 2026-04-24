@@ -1,0 +1,157 @@
+{
+  "message": "",
+  "dashboard_data": [
+    {
+      "name": "GENERAL DASHBOARD",
+      "data": {
+        "memberCount": {
+          "total": 105,
+          "male": 69,
+          "female": 28
+        },
+        "projectCount": {
+          "total": 107,
+          "categoryCount": [
+            { "name": "AI/ML", "count": 16 },
+            { "name": "AR/VR", "count": 1 },
+            { "name": "DESKTOP", "count": 11 },
+            { "name": "IOT", "count": 12 },
+            { "name": "MOBILE", "count": 44 },
+            { "name": "SYSTEMS", "count": 12 },
+            { "name": "WEB", "count": 78 }
+          ]
+        },
+        "projectPerStatusCount": [
+          { "count": 54, "status": "ON_DEVELOPMENT" },
+          { "count": 27, "status": "ON_PROOF_OF_CONCEPT" },
+          { "count": 13, "status": "ON_PILLOT" },
+          { "count": 9, "status": "ON_PRODUCTION" },
+          { "count": 4, "status": "ON_HOLD" }
+        ],
+        "projectStatusPerMonthCount": [
+          {
+            "month": 1,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 3 },
+              { "status": "ON_HOLD", "count": 1 },
+              { "status": "ON_DEVELOPMENT", "count": 4 },
+              { "status": "ON_PILLOT", "count": 0 },
+              { "status": "ON_PRODUCTION", "count": 2 }
+            ]
+          },
+          {
+            "month": 2,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 5 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 5 },
+              { "status": "ON_PILLOT", "count": 2 },
+              { "status": "ON_PRODUCTION", "count": 0 }
+            ]
+          },
+          {
+            "month": 3,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 2 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 3 },
+              { "status": "ON_PILLOT", "count": 0 },
+              { "status": "ON_PRODUCTION", "count": 0 }
+            ]
+          },
+          {
+            "month": 4,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 2 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 3 },
+              { "status": "ON_PILLOT", "count": 1 },
+              { "status": "ON_PRODUCTION", "count": 0 }
+            ]
+          },
+          {
+            "month": 5,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 2 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 5 },
+              { "status": "ON_PILLOT", "count": 4 },
+              { "status": "ON_PRODUCTION", "count": 1 }
+            ]
+          },
+          {
+            "month": 6,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 1 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 2 },
+              { "status": "ON_PILLOT", "count": 1 },
+              { "status": "ON_PRODUCTION", "count": 0 }
+            ]
+          },
+          {
+            "month": 7,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 1 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 10 },
+              { "status": "ON_PILLOT", "count": 1 },
+              { "status": "ON_PRODUCTION", "count": 2 }
+            ]
+          },
+          {
+            "month": 8,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 5 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 2 },
+              { "status": "ON_PILLOT", "count": 1 },
+              { "status": "ON_PRODUCTION", "count": 1 }
+            ]
+          },
+          {
+            "month": 9,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 1 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 5 },
+              { "status": "ON_PILLOT", "count": 1 },
+              { "status": "ON_PRODUCTION", "count": 0 }
+            ]
+          },
+          {
+            "month": 10,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 2 },
+              { "status": "ON_HOLD", "count": 3 },
+              { "status": "ON_DEVELOPMENT", "count": 8 },
+              { "status": "ON_PILLOT", "count": 2 },
+              { "status": "ON_PRODUCTION", "count": 3 }
+            ]
+          },
+          {
+            "month": 11,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 2 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 6 },
+              { "status": "ON_PILLOT", "count": 0 },
+              { "status": "ON_PRODUCTION", "count": 0 }
+            ]
+          },
+          {
+            "month": 12,
+            "projectStatusCount": [
+              { "status": "ON_PROOF_OF_CONCEPT", "count": 1 },
+              { "status": "ON_HOLD", "count": 0 },
+              { "status": "ON_DEVELOPMENT", "count": 1 },
+              { "status": "ON_PILLOT", "count": 0 },
+              { "status": "ON_PRODUCTION", "count": 0 }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "conversation_id": "fimklmfkldvlkmfl"
+}

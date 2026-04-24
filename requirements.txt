@@ -1,0 +1,16 @@
+Django==5.1.6
+djangorestframework==3.16.0
+django-ninja==1.4.3
+scalar-django-ninja @ git+https://github.com/scalar/scalar.git@2056005922145655429fb7f9b726929c3d57f70c#subdirectory=integrations/django-ninja
+django-environ~=0.11.2
+python-dotenv==1.0.0
+pydantic-ai==1.0.10
+uvicorn==0.36.0
+pandas==2.3.2
+daphne==4.2.1
+aiofiles==24.1.0
+python-magic==0.4.27
+CairoSVG==2.8.2
+gunicorn==23.0.0
+psycopg2-binary==2.9.11
+pyvips==3.1.1

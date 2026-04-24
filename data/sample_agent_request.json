@@ -1,0 +1,29 @@
+{
+  "messages": [
+    {
+      "role": "user", 
+      "content": "What insights can you provide about the current dashboard data?"
+    }
+  ],
+  "context": {
+    "user_is_viewing": [
+      {
+        "id": 123,
+        "type": "question",
+        "sql_engine": "postgresql",
+        "chart_configs": [
+          {
+            "display_type": "line",
+            "title": "Monthly Revenue Trend",
+            "description": "Revenue tracking over the past 12 months"
+          }
+        ]
+      }
+    ],
+    "current_user_time": "2025-11-26T10:30:00Z",
+    "capabilities": ["query_execution", "chart_creation", "data_analysis"]
+  },
+  "state": {},
+  "user_id": 42,
+  "conversation_id": "conv_12345_abcdef"
+}

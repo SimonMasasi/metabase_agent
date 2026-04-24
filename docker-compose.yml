@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-here}
+      - DB_DRIVER=${DB_DRIVER:-sqlite}
+      - DATABASE_NAME=${DATABASE_NAME:-}
+      - DATABASE_USER=${DATABASE_USER:-}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-}
+      - DATABASE_HOST=${DATABASE_HOST:-db}
+      - DATABASE_PORT=${DATABASE_PORT:-5432}
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+    depends_on:
+      - db
+    command: sh -c "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 metabase_helpers.asgi:application"
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME:-metabase_helpers}
+      - POSTGRES_USER=${DATABASE_USER:-postgres}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+  static_volume:
