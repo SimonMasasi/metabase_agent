@@ -83,51 +83,28 @@ def get_token_feature(request: HttpRequest):
         logging.info("successfully fetched token features")
 
         return {
-            "valid": True,
-            "status": "active",
-            "error-details": None,
-            "features": [
-                "advanced-config",
-                "advanced-permissions",
-                "audit-app",
-                "cache-granular-controls",
-                "collection-cleanup",
-                "config-text-file",
-                "content-management",
-                "content-verification",
-                "dashboard-subscription-filters",
-                "database-auth-providers",
-                "disable-password-login",
-                "email-allow-list",
-                "email-restrict-recipients",
-                "embedding-sdk",
-                "embedding",
-                "hosting",
-                "metabase-store-managed",
-                "metabot-v3",
-                "no-upsell",
-                "official-collections",
-                "query-reference-validation",
-                "question-error-logs",
-                "sandboxes",
-                "scim",
-                "serialization",
-                "session-timeout-config",
-                "snippet-collections",
-                "sso-google",
-                "sso-jwt",
-                "sso-ldap",
-                "sso-saml",
-                "sso",
-                "upload-management",
-                "whitelabel",
-            ],
-            "plan-alias": "pro-self-hosted",
-            "trial": False,
-            "valid-thru": "2099-12-31T12:00:00",
-            "max-users": 100,
-            "company": "ega",
-        }
+                "valid": True,
+                "status": "OK",
+                "error-details": None,
+                "canonical?": True,
+                "features": ["sandboxes", "audit-app"],
+                "plan-alias": "pro",
+                "trial": False,
+                "valid-thru": "2026-12-31",
+                "max-users": 100,
+                "company": "Acme Corp",
+                "store-users": [
+                    { "email": "simonejohnee@gmail.com" },
+                    { "email": "simonejohnee@gmail.com" }
+                ],
+                "meters": {
+                    "api-calls": 5000,
+                    "storage-gb": 50
+                },
+                "quotas": [
+                    { "name": "users", "limit": 100, "used": 45 }
+                ]
+            }
 
     except Exception as e:
         logging.error(f"error occurred {e}")
