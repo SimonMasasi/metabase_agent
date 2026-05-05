@@ -179,3 +179,4 @@ yarn.lock
 
 #macos
 .DS_Store
+/logs/

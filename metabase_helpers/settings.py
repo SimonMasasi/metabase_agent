@@ -12,8 +12,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import dotenv_values
+import os
 
-config = dotenv_values(".env")
+#check if .env file exists and load it, otherwise use environment variables
+
+if os.path.exists(".env"):
+    config = dotenv_values(".env")
+else:
+    config = os.environ
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -148,6 +154,9 @@ METABASE_API_KEY = config.get("METABASE_API_KEY", None)
 METABASE_BASE_URL = config.get("METABASE_BASE_URL", None)
 GROQ_API_KEY = config.get("GROQ_API_KEY", None)
 
+#make sure logs directory exists
+if not os.path.exists("logs"):
+    os.makedirs("logs")
 
 LOGGING = {
     "version": 1,
