@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # registered apps
     "metabase_agent_helper",
-    "metabase_analyzer_helper",
 ]
 
 MIDDLEWARE = [
