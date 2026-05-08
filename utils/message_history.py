@@ -1,4 +1,4 @@
-from metabase_agent_helper.models import MessagesHistory
+from metabase_agent_main.models import MessagesHistory
 from asgiref.sync import sync_to_async
 from pydantic_ai.messages import ModelMessagesTypeAdapter, ModelMessage
 

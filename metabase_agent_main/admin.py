@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from .models import *
 
-app_config = apps.get_app_config("metabase_agent_helper")
+app_config = apps.get_app_config("metabase_agent_main")
 
 models = app_config.get_models()
 

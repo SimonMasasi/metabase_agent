@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metabase_agent_helper', '0001_initial'),
+        ('metabase_agent_main', '0001_initial'),
     ]
 
     operations = [

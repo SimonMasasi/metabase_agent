@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # registered apps
-    "metabase_agent_helper",
+    "metabase_agent_main",
 ]
 
 MIDDLEWARE = [
