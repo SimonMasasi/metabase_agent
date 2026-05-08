@@ -1,5 +1,8 @@
 # Use Python 3.11 slim image as base
-FROM python:3.11-slim
+FROM python:3.12-slim
+
+# Copy uv binary from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -15,6 +18,7 @@ RUN apt-get update \
         build-essential \
         libpq-dev \
         libmagic1 \
+        libvips42 \
         libcairo2-dev \
         libgirepository1.0-dev \
         pkg-config \
@@ -22,7 +26,7 @@ RUN apt-get update \
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --system --no-cache -r requirements.txt
 
 # Copy project
 COPY . .

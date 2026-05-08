@@ -108,22 +108,28 @@ metabase_helpers/
 
 #### Prerequisites Setup
 
-1. **Install Python dependencies**
+1. **Install native system dependencies**
+
+   Ubuntu/Debian:
+
+   ```bash
+   sudo apt update
+   sudo apt install -y libvips42 libcairo2 pkg-config
+   ```
+
+   macOS (Homebrew):
+
+   ```bash
+   brew install vips cairo pkg-config
+   ```
+
+2. **Install Python dependencies**
 
    ```bash
    pip install -r requirements.txt
    ```
 
-   ```bash
-      sudo apt install libvips libvips-dev 
-   ```
-   or in mac 
-   ```bash
-      brew install vips
-   ```
-
-
-2. **Set up environment variables**
+3. **Set up environment variables**
    ```bash
    cp env.example .env
    nano .env  # Edit with your settings
