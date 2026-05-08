@@ -14,29 +14,31 @@ from pydantic_ai.messages import (
     ThinkingPartDelta,
     ToolCallPartDelta,
 )
+from pydantic_ai import Agent, FunctionToolset
+
 
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
 
 from constants.metabase_request_schemas import MetabaseAgentRequest
 from constants.prompt import SYSTEM_PROMPT
-from tools.chart_tools import resolve_get_chart_or_dashboard_image
+from tools.chart_tools import get_chart_or_dashboard_image
 from tools.schema_tools import (
-    resolve_database_schema,
-    resolve_sample_data_from_viewing_context,
-    resolve_table_schema_metadata,
+    get_database_schema,
+    get_sample_data_from_viewing_context,
+    get_table_schema_metadata,
 )
 from tools.sql_fixing_tools import (
-    resolve_display_sql_in_editor,
-    resolve_get_quey_data_to_fix_from_sql_error,
+    display_fixed_sql_in_editor,
+    get_quey_data_to_fix_from_sql_error,
 )
 from tools.user_helper_tools import (
-    resolve_current_user_viewing_context,
-    resolve_get_chart_generation_schema_sample,
-    resolve_navigate_user_to_view_chart,
-    resolve_user_details_and_current_time,
-    resolve_get_messages_history,
-    resolver_current_user_chart_configs,
+    current_user_viewing_context,
+    get_chart_generation_schema_sample,
+    navigate_user_to_view_chart,
+    get_user_details_and_current_time,
+    get_messages_history,
+    current_user_chart_configs,
 )
 from utils.logging import metabase_helpers_logging
 from django.conf import settings
@@ -74,154 +76,17 @@ if getattr(settings, 'USING_DEEPSEEK', False) and not settings.GROQ_API_KEY:
     )
 
 
+tool_sets = [get_table_schema_metadata,navigate_user_to_view_chart , get_sample_data_from_viewing_context , get_user_details_and_current_time ,
+            get_quey_data_to_fix_from_sql_error , get_chart_generation_schema_sample , get_database_schema , get_chart_or_dashboard_image ,
+            current_user_viewing_context  , current_user_chart_configs , get_messages_history , display_fixed_sql_in_editor]
+
 analytics_agent = Agent(
     model,
     deps_type=MetabaseAgentRequest,
     system_prompt=SYSTEM_PROMPT,
+    tools=tool_sets
 )
 
-
-@analytics_agent.tool
-async def get_table_schema_metadata(
-    ctx: RunContext[MetabaseAgentRequest],
-) -> Dict[str, Any]:
-    """
-    Fetches detailed metadata for all tables in the DAT(Data Analytics Tool) instance.
-    Returns a dictionary containing table metadata.
-    If an error occurs, returns a dictionary with an error message.
-    """
-    return await resolve_table_schema_metadata(ctx)
-
-
-@analytics_agent.tool
-async def navigate_user_to_view_chart(
-    cnx: RunContext[MetabaseAgentRequest], json_string_schema: str
-) -> str:
-    """
-    Navigates the user to a specific chart view in DAT(Data Analytics Tool) using a Json chart schema.
-    Returns a success message with the navigation URL.
-    If an error occurs, returns an error message.
-    """
-    chart_url = await resolve_navigate_user_to_view_chart(json_string_schema, cnx)
-
-    return chart_url
-
-
-@analytics_agent.tool
-async def get_sample_data_from_viewing_context(
-    ctx: RunContext[MetabaseAgentRequest],
-) -> Dict[str, Any]:
-    """
-    Fetches sample data for the current viewing context in DAT(Data Analytics Tool).
-    Returns a dictionary containing sample data.
-    If an error occurs, returns a dictionary with an error message.
-    """
-
-    return await resolve_sample_data_from_viewing_context(ctx)
-
-
-@analytics_agent.tool
-async def get_user_details_and_current_time(
-    ctx: RunContext[MetabaseAgentRequest],
-) -> str:
-    """
-    Fetches details of the current logged-in user from DAT(Data Analytics Tool) and returns a formatted string with user info and current time.
-    If no user is logged in, returns a message indicating that.
-    """
-
-    return await resolve_user_details_and_current_time(ctx)
-
-
-@analytics_agent.tool
-async def get_quey_data_to_fix_from_sql_error(
-    ctx: RunContext[MetabaseAgentRequest],
-) -> Dict[str, Any]:
-    """
-    Fetches query data that needs to be fixed based on SQL errors in the current viewing context.
-    Returns a dictionary containing the relevant query data.
-    If an error occurs, returns a dictionary with an error message.
-    """
-
-    return await resolve_get_quey_data_to_fix_from_sql_error(ctx)
-
-
-@analytics_agent.tool
-async def get_database_schema(ctx: RunContext[MetabaseAgentRequest]) -> Dict[str, Any]:
-    """
-    Retrieve the database schema for the current DAT(Data Analytics Tool) instance or the
-    viewing context provided by the agent request.
-
-    """
-    return await resolve_database_schema(ctx)
-
-
-@analytics_agent.tool
-async def get_chart_generation_schema_sample(
-    ctx: RunContext[MetabaseAgentRequest],
-) -> Dict[str, Any]:
-    """
-    Return a small schema sample useful for generating chart payloads.
-
-    """
-
-    return await resolve_get_chart_generation_schema_sample(ctx)
-
-
-@analytics_agent.tool
-async def get_chart_or_dashboard_image(ctx: RunContext[MetabaseAgentRequest]):
-    """
-    Produce a chart or dashboard image (or a Base64-encoded payload) for the
-    current viewing context or a supplied chart definition.
-    """
-
-    return await resolve_get_chart_or_dashboard_image(ctx)
-
-
-@analytics_agent.tool
-async def current_user_viewing_context(ctx: RunContext[MetabaseAgentRequest]):
-    """
-    Return the current viewing context for the logged-in user.
-    """
-    data = await resolve_current_user_viewing_context(ctx)
-
-    if len(data) == 0:
-        return "NO content Found"
-
-    return data
-
-
-@analytics_agent.tool
-async def current_user_chart_configs(ctx: RunContext[MetabaseAgentRequest]):
-    """
-    Fetch chart configuration presets or user-specific chart preferences.
-    """
-
-    return resolver_current_user_chart_configs(ctx)
-
-
-@analytics_agent.tool
-async def get_messages_history(
-    ctx: RunContext[MetabaseAgentRequest],
-):
-    """
-    Retrieve recent message history for the current conversation.
-    """
-
-    return await resolve_get_messages_history(ctx)
-
-
-@analytics_agent.tool
-async def display_fixed_sql_in_editor(
-    ctx: RunContext[MetabaseAgentRequest], fixed_sql: str
-):
-    """Display Fixed sql to the users sql Editor this fuction receives the fixed_sql as an argument"""
-
-    data = await resolve_display_sql_in_editor(ctx, fixed_sql)
-
-    if not data["success"]:
-        return "error Occured While displaying sql"
-
-    return "sql_fixed#" + data["base_64_context"]
 
 
 async def analytics_steaming_agent(user_data: MetabaseAgentRequest):

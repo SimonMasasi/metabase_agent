@@ -19,8 +19,8 @@ logging = metabase_helpers_logging()
 metabase_api = MetabaseAPIService()
 
 
-async def resolve_navigate_user_to_view_chart(
-    json_string_schema: str, cnx: RunContext[MetabaseAgentRequest]
+async def navigate_user_to_view_chart(
+    cnx: RunContext[MetabaseAgentRequest] , json_string_schema: str,
 ) -> str:
 
     try:
@@ -44,7 +44,7 @@ async def resolve_navigate_user_to_view_chart(
         return f"Error: {str(e)}"
 
 
-async def resolve_user_details_and_current_time(
+async def get_user_details_and_current_time(
     ctx: RunContext[MetabaseAgentRequest],
 ) -> str:
 
@@ -63,7 +63,7 @@ async def resolve_user_details_and_current_time(
     return f"{user_info} and the current time is {current_time}"
 
 
-async def resolve_get_chart_generation_schema_sample(
+async def get_chart_generation_schema_sample(
     cnx: RunContext[MetabaseAgentRequest],
 ) -> Dict[str, Any]:
     """This Function Gets The sample Schema For Chart Generation"""
@@ -102,14 +102,14 @@ async def resolve_get_chart_generation_schema_sample(
         }
 
 
-async def resolve_get_messages_history(cnx: RunContext[MetabaseAgentRequest]):
+async def get_messages_history(cnx: RunContext[MetabaseAgentRequest]):
 
     messages = await get_all_messages(cnx.deps.conversation_id)
 
     return messages
 
 
-async def resolve_current_user_viewing_context(
+async def current_user_viewing_context(
     cnx: RunContext[MetabaseAgentRequest],
 ) -> List[ViewingContext]:
 
@@ -119,7 +119,7 @@ async def resolve_current_user_viewing_context(
     return cnx.deps.context.user_is_viewing[0].model_dump_json()
 
 
-async def resolver_current_user_chart_configs(cnx: RunContext[MetabaseAgentRequest]):
+async def current_user_chart_configs(cnx: RunContext[MetabaseAgentRequest]):
 
     user_is_viewing_list = cnx.deps.context.user_is_viewing or []
 

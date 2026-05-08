@@ -11,7 +11,7 @@ logging = metabase_helpers_logging()
 metabase_api = MetabaseAPIService()
 
 
-async def resolve_get_quey_data_to_fix_from_sql_error(
+async def get_quey_data_to_fix_from_sql_error(
     ctx: RunContext[MetabaseAgentRequest],
 ) -> Dict[str, Any]:
 
@@ -67,9 +67,9 @@ async def resolve_get_quey_data_to_fix_from_sql_error(
         return {"error": str(e)}
 
 
-async def resolve_display_sql_in_editor(
+async def display_fixed_sql_in_editor(
     ctx: RunContext[MetabaseAgentRequest], corrected_sql: str
-) -> Dict[str, Any]:
+) ->str:
 
     try:
 
@@ -77,14 +77,14 @@ async def resolve_display_sql_in_editor(
 
         if len(user_is_currently_viewing) == 0:
             logging.info("no user content currently viewing Found")
-            return {"success": False, "base_64_context": None}
+            return "No user content currently viewing Found"
 
         user_is_currently_viewing_data = user_is_currently_viewing[0]
 
         query = user_is_currently_viewing_data.query
 
         if query is None:
-            return {"success": False, "base_64_context": None}
+            return "No query found for the current viewing context"
 
         database = query.database
         type_of_query = "native"
@@ -110,8 +110,8 @@ async def resolve_display_sql_in_editor(
 
         base_64_context = base64.b64encode(json.dumps(json_data).encode()).decode()
 
-        return {"success": True, "base_64_context": base_64_context}
+        return "sql_fixed#" + base_64_context
 
     except Exception as e:
         logging.error(f"Error Occurred while displaying sql in editor: {str(e)}")
-        return {"success": False, "base_64_context": None}
+        return "Error Occurred while displaying sql in editor"

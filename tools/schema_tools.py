@@ -9,7 +9,7 @@ logging = metabase_helpers_logging()
 metabase_api = MetabaseAPIService()
 
 
-async def resolve_table_schema_metadata(
+async def get_table_schema_metadata(
     ctx: RunContext[MetabaseAgentRequest],
 ) -> Dict[str, Any]:
 
@@ -86,7 +86,7 @@ async def resolve_table_schema_metadata(
         return {"error": str(e)}
 
 
-async def resolve_sample_data_from_viewing_context(
+async def get_sample_data_from_viewing_context(
     ctx: RunContext[MetabaseAgentRequest],
 ) -> Dict[str, Any]:
 
@@ -131,7 +131,7 @@ async def resolve_sample_data_from_viewing_context(
         return {"error": str(e)}
 
 
-async def resolve_database_schema(
+async def get_database_schema(
     ctx: RunContext[MetabaseAgentRequest],
 ):
     """

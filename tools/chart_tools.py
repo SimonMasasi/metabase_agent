@@ -15,7 +15,7 @@ logging = metabase_helpers_logging()
 metabase_api = MetabaseAPIService()
 
 
-async def resolve_get_chart_or_dashboard_image(
+async def get_chart_or_dashboard_image(
     ctx: RunContext[MetabaseAgentRequest],
 ) -> BinaryContent | str:
 
