@@ -21,8 +21,8 @@ from urls.api_v2 import api_v2
 from ninja import NinjaAPI
 from views.v1.license import license_router
 
-admin.site.site_title = "Metabase Helpers Admin"
-admin.site.site_header = "Metabase Helpers Admin"
+admin.site.site_title = "Metabase Agent Admin"
+admin.site.site_header = "Metabase Agent Admin"
 
 # Create API for license/token status endpoints
 api_license = NinjaAPI(version="2.0")

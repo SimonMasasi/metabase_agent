@@ -3,7 +3,7 @@ from views.v2.agent import agent_router
 from views.v2.dashboard_analysis import dashboard_analysis_router
 
 
-api_title = "METABASES HELPER API V2"
+api_title = "METABASE AGENT API V2"
 
 api_v2 = NinjaAPI(version="2.0")
 

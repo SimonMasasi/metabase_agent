@@ -4,7 +4,7 @@ from views.v1.metrics import metrics_router
 from views.v1.sql import sql_router
 
 
-api_title = "METABASES HELPER API V1"
+api_title = "METABASE AGENT API V1"
 
 api_v1 = NinjaAPI(version="1.0")
 
