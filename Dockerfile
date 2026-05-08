@@ -7,7 +7,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=metabase_helpers.settings
+ENV DJANGO_SETTINGS_MODULE=metabase_agent.settings
 
 # Set work directory
 WORKDIR /app
@@ -46,4 +46,4 @@ USER appuser
 EXPOSE 8000
 
 # Run database migrations and start Daphne server
-CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 metabase_helpers.asgi:application"]
+CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 metabase_agent.asgi:application"]

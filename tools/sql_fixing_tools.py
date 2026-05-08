@@ -3,11 +3,11 @@ from pydantic_ai import RunContext
 import base64
 import json
 from constants.metabase_request_schemas import MetabaseAgentRequest
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 from utils.metabase_api import MetabaseAPIService
 
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 metabase_api = MetabaseAPIService()
 
 

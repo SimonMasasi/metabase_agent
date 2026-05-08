@@ -40,14 +40,14 @@ from tools.user_helper_tools import (
     get_messages_history,
     current_user_chart_configs,
 )
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 from django.conf import settings
 from utils.message_history import (
     save_new_conversation,
     get_all_messages,
 )
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 if settings.OPENAI_API_KEY is not None:
     logging.info("OPENAI_API_KEY is  set in environment variables.")

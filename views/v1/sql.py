@@ -3,10 +3,10 @@ from ninja import Router
 
 from agents.sql_generation import generate_sql_from_request
 from agents.sql_fix import fix_sql_query
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 import json
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 sql_router = Router()

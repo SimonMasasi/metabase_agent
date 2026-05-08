@@ -2,13 +2,13 @@ from django.http import HttpRequest
 from ninja import Router
 
 from constants.metabase_request_schemas import DashboardAnalysisRequest , DashboardDataResponse
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 import json
 from django.http import StreamingHttpResponse
 
 from agents.dashboard_agent import dashboard_steaming_agent , dashboard_agent_non_stream
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 dashboard_analysis_router = Router()

@@ -3,7 +3,7 @@ import base64
 import magic
 from pydantic_ai import RunContext
 from constants.metabase_request_schemas import MetabaseAgentRequest
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 from utils.image_utils import compress_image_async
 from utils.image_ai_completion import get_analysis_from_image_groq
 from utils.metabase_api import MetabaseAPIService
@@ -11,7 +11,7 @@ from pydantic_ai import BinaryContent
 import cairosvg
 
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 metabase_api = MetabaseAPIService()
 
 

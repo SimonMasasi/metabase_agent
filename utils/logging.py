@@ -1,5 +1,5 @@
 import logging
 
-def metabase_helpers_logging():
+def metabase_agent_logging():
 
-    return logging.getLogger('metabase_helpers')
+    return logging.getLogger('metabase_agent')

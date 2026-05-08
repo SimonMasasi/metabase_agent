@@ -3,12 +3,12 @@ from ninja import Router
 
 from serializers.baseSerializer import ResultsSchema
 from utils.image_ai_completion import get_analysis_from_image
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 import json
 
 analyzer_router = Router()
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 @analyzer_router.post("/chart", response=ResultsSchema)

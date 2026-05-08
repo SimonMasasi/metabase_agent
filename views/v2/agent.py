@@ -2,14 +2,14 @@ from django.http import HttpRequest
 from ninja import Router
 
 from constants.metabase_request_schemas import MetabaseAgentRequest
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 import json
 from agents.ask import get_metabot_response
 from django.http import StreamingHttpResponse
 
 from agents.py_dantic_agent import analytics_steaming_agent
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 agent_router = Router()

@@ -20,14 +20,14 @@ from pydantic_ai.providers.openai import OpenAIProvider
 from constants.dashboard_prompt import DASHBOARD_ANALYTICS_PROMPT
 
 from constants.metabase_request_schemas import DashboardAnalysisRequest
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 from django.conf import settings
 from utils.message_history import (
     save_new_conversation,
     get_all_messages,
 )
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 if settings.OPENAI_API_KEY is not None:
     setattr(settings, 'USING_DEEPSEEK', False)

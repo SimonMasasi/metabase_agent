@@ -2,11 +2,11 @@ from django.http import HttpRequest
 from ninja import Router
 
 from serializers.baseSerializer import ResultsSchema
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 
 license_router = Router()
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 @license_router.get("/{token}/v2/status")

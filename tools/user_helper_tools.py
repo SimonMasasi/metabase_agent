@@ -10,12 +10,12 @@ from utils.chart_validators import (
     check_if_chart_is_valid,
     modify_chart_schema_if_necessary,
 )
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 from utils.message_history import get_all_messages
 from utils.metabase_api import MetabaseAPIService
 
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 metabase_api = MetabaseAPIService()
 
 

@@ -1,9 +1,9 @@
 from pydantic_ai import RunContext
 from constants.metabase_request_schemas import MetabaseAgentRequest
 from constants.sample_queries import SAMPLE_QUERY_ONE
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 async def modify_chart_schema_if_necessary(

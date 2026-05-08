@@ -5,7 +5,7 @@ A Django application that provides helper tools for working with Metabase. This 
 ## Project Structure
 
 ```
-metabase_helpers/
+metabase_agent/
 ├── metabase_agent_helper/      # Agent-based helper functionality
 ├── metabase_analyzer_helper/   # Analysis tools
 ├── metabase_metrics_helper/    # Metrics utilities
@@ -34,7 +34,7 @@ metabase_helpers/
 
    ```bash
    git clone <repository-url>
-   cd metabase_helpers
+   cd metabase_agent
    ```
 
 2. **Copy environment file**
@@ -87,7 +87,7 @@ metabase_helpers/
    SECRET_KEY=your-very-secure-secret-key
    DEBUG=False
    DB_DRIVER=pg
-   DATABASE_NAME=metabase_helpers
+   DATABASE_NAME=metabase_agent
    DATABASE_USER=your_db_user
    DATABASE_PASSWORD=your_secure_password
    DATABASE_HOST=db
@@ -148,16 +148,16 @@ python manage.py migrate
 1. Install PostgreSQL and create a database:
 
    ```sql
-   CREATE DATABASE metabase_helpers;
+   CREATE DATABASE metabase_agent;
    CREATE USER your_user WITH PASSWORD 'your_password';
-   GRANT ALL PRIVILEGES ON DATABASE metabase_helpers TO your_user;
+   GRANT ALL PRIVILEGES ON DATABASE metabase_agent TO your_user;
    ```
 
 2. Update your `.env` file:
 
    ```env
    DB_DRIVER=pg
-   DATABASE_NAME=metabase_helpers
+   DATABASE_NAME=metabase_agent
    DATABASE_USER=your_user
    DATABASE_PASSWORD=your_password
    DATABASE_HOST=localhost
@@ -180,13 +180,13 @@ python manage.py runserver
 **Option B: Using Daphne (ASGI server)**
 
 ```bash
-daphne -b 0.0.0.0 -p 8000 metabase_helpers.asgi:application
+daphne -b 0.0.0.0 -p 8000 metabase_agent.asgi:application
 ```
 
 **Option C: Using Uvicorn**
 
 ```bash
-uvicorn metabase_helpers.asgi:application --host 0.0.0.0 --port 8000 --reload
+uvicorn metabase_agent.asgi:application --host 0.0.0.0 --port 8000 --reload
 ```
 
 #### Creating a Superuser
@@ -294,7 +294,7 @@ docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py shell
 
 # Access database shell (PostgreSQL)
-docker-compose exec db psql -U postgres metabase_helpers
+docker-compose exec db psql -U postgres metabase_agent
 ```
 
 ## Environment Variables

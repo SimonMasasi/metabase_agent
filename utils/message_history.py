@@ -2,10 +2,10 @@ from metabase_agent_helper.models import MessagesHistory
 from asgiref.sync import sync_to_async
 from pydantic_ai.messages import ModelMessagesTypeAdapter, ModelMessage
 
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 async def get_all_messages(conversation_id:str) -> list[ModelMessage]:

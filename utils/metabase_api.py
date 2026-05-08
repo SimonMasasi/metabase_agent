@@ -7,11 +7,11 @@ from constants.metabase_constants import MetabaseEndpoints
 from functools import lru_cache
 from datetime import datetime, timedelta
 
-from utils.logging import metabase_helpers_logging
+from utils.logging import metabase_agent_logging
 from constants.metabase_schemas import DatasetQuery
 
 
-logging = metabase_helpers_logging()
+logging = metabase_agent_logging()
 
 
 class MetabaseAPIError(Exception):
