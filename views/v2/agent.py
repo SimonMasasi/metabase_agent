@@ -4,10 +4,10 @@ from ninja import Router
 from constants.metabase_request_schemas import MetabaseAgentRequest
 from utils.logging import metabase_helpers_logging
 import json
-from utils.ask import get_metabot_response
+from agents.ask import get_metabot_response
 from django.http import StreamingHttpResponse
 
-from utils.py_dantic_agent import analytics_steaming_agent
+from agents.py_dantic_agent import analytics_steaming_agent
 
 logging = metabase_helpers_logging()
 

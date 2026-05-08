@@ -6,7 +6,7 @@ from utils.logging import metabase_helpers_logging
 import json
 from django.http import StreamingHttpResponse
 
-from utils.dashboard_agent import dashboard_steaming_agent , dashboard_agent_non_stream
+from agents.dashboard_agent import dashboard_steaming_agent , dashboard_agent_non_stream
 
 logging = metabase_helpers_logging()
 

@@ -1,8 +1,8 @@
 from django.http import HttpRequest
 from ninja import Router
 
-from utils.sql_generation import generate_sql_from_request
-from utils.sql_fix import fix_sql_query
+from agents.sql_generation import generate_sql_from_request
+from agents.sql_fix import fix_sql_query
 from utils.logging import metabase_helpers_logging
 import json
 
