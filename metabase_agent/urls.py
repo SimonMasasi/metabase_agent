@@ -20,6 +20,7 @@ from urls.api_v1 import api_v1
 from urls.api_v2 import api_v2
 from ninja import NinjaAPI
 from views.v1.license import license_router
+from views.v1.anthropic import anthropic_router
 
 admin.site.site_title = "Metabase Agent Admin"
 admin.site.site_header = "Metabase Agent Admin"
@@ -28,9 +29,14 @@ admin.site.site_header = "Metabase Agent Admin"
 api_license = NinjaAPI(version="2.0")
 api_license.add_router("", license_router)
 
+# Create API for anthropic models endpoint
+api_anthropic = NinjaAPI(version="1.0")
+api_anthropic.add_router("", anthropic_router)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', api_v1.urls , name='api_v1'),
     path('api/v2/', api_v2.urls, name='api_v2'),
     path('api/', api_license.urls, name='api_license'),
+    path('anthropic/', api_anthropic.urls, name='api_anthropic'),
 ]

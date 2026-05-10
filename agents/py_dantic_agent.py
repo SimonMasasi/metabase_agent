@@ -98,7 +98,7 @@ async def analytics_steaming_agent(user_data: MetabaseAgentRequest):
         message_history = await get_all_messages(user_data.conversation_id)
 
         async with analytics_agent.iter(
-            user_data.messages[0].content,
+            user_data.messages[0].content[0].text,
             deps=user_data,
             message_history=message_history,
         ) as run:

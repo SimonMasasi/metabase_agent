@@ -32,19 +32,24 @@ class UserContext(BaseModel):
     current_user_time: datetime | None = None
     capabilities: Optional[List[str]]
 
+class MetabaseContent(BaseModel):
+    type: str
+    text:str
 
 class Message(BaseModel):
     role: str
-    content: str = "analyze the given data"
+    content: list[MetabaseContent]
 
 
 class MetabaseAgentRequest(BaseModel):
     messages: List[Message]
-    context: UserContext
+    model: str
+    context: Optional[UserContext] = None
     state: Dict = Field(default={})
+    system:str
     # history: List = Field( default=[])
-    user_id: int
-    conversation_id: str
+    user_id: Optional[int] = None
+    conversation_id: str = "contersation_id_not_provided"
 
 class DashboardDetails(BaseModel):
     name: str
