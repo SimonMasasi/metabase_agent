@@ -151,7 +151,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 OPENAI_API_KEY = config.get("OPENAI_API_KEY", None)
 DEEPSEEK_API_KEY = config.get("DEEPSEEK_API_KEY", None)
 METABASE_API_KEY = config.get("METABASE_API_KEY", None)
-METABASE_BASE_URL = config.get("METABASE_BASE_URL", None)
+METABASE_BASE_URL = config.get("METABASE_BASE_URL", "http://localhost:3000")
 GROQ_API_KEY = config.get("GROQ_API_KEY", None)
 
 #make sure logs directory exists
