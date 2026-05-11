@@ -152,5 +152,5 @@ async def analytics_steaming_agent(user_data: MetabaseAgentRequest):
 
                     yield f"d:{json.dumps({'finishReason': 'stop', 'usage': {'promptTokens': 0, 'completionTokens': 0}})}\n\n"
     except Exception as e:
-        logging.error(e)
+        logging.error(f"Error in analytics_steaming_agent: {type(e).__name__}: {str(e)}", stack_info=True)
         yield f"0:{json.dumps({'type': 'text', 'value': "Oops an error occurred while Performing That , Please Would You try Again"})}\n\n"

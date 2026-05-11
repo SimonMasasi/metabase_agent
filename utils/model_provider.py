@@ -4,22 +4,33 @@ from django.conf import settings
 from .logging import metabase_agent_logging
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
+import httpx
 
 logging = metabase_agent_logging()
 
 def get_model_provider():
+    timeout = httpx.Timeout(30.0, read=300.0)
+
     if settings.OPENAI_API_KEY is not None:
         logging.info("OPENAI_API_KEY is  set in environment variables.")
         setattr(settings, 'USING_DEEPSEEK', False)
         return OpenAIChatModel(
-            "gpt-4o", provider=OpenAIProvider(api_key=settings.OPENAI_API_KEY)
+            "gpt-4o",
+            provider=OpenAIProvider(
+                api_key=settings.OPENAI_API_KEY,
+                http_client=httpx.AsyncClient(timeout=timeout),
+            ),
         )
     elif settings.DEEPSEEK_API_KEY is not None:
         logging.info("DEEPSEEK_API_KEY is  set in environment variables.")
         setattr(settings, 'USING_DEEPSEEK', True)
         return OpenAIChatModel(
             model_name="deepseek-chat",
-            provider=OpenAIProvider(api_key=settings.DEEPSEEK_API_KEY, base_url="https://api.deepseek.com/v1"),
+            provider=OpenAIProvider(
+                api_key=settings.DEEPSEEK_API_KEY,
+                base_url="https://api.deepseek.com/v1",
+                http_client=httpx.AsyncClient(timeout=timeout),
+            ),
         )    
     else:
         logging.error(

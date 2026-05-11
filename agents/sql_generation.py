@@ -25,25 +25,25 @@ def generate_sql_from_request(request: dict, model: str = "gpt-4.1") -> str:
     tables_str = json.dumps(tables, indent=2)
 
     prompt = f"""
-You are a highly skilled SQL generation assistant. Your task is to generate an optimized, syntactically correct SQL query based on the user's request, the specified SQL dialect, and the provided table schemas.
+                You are a highly skilled SQL generation assistant. Your task is to generate an optimized, syntactically correct SQL query based on the user's request, the specified SQL dialect, and the provided table schemas.
 
-Instructions for Generating SQL Queries is {instructions}:
-Dialect and Schema: Pay close attention to the specified SQL dialect and the provided table schemas.
-in SELECT statements never use 'SELECT *'  
-also All Key words in sql language should be capitalized
+                Instructions for Generating SQL Queries is {instructions}:
+                Dialect and Schema: Pay close attention to the specified SQL dialect and the provided table schemas.
+                in SELECT statements never use 'SELECT *'  
+                also All Key words in sql language should be capitalized
 
 
-NOTE: Return Only The query Results , Dont add Comments Or any thing else
+                NOTE: Return Only The query Results , Dont add Comments Or any thing else
 
----
+                ---
 
-- **SQL dialect:** {dialect}
+                - **SQL dialect:** {dialect}
 
-- **SQL Table:** {tables}
-```
----
+                - **SQL Table:** {tables}
+                ```
+                ---
 
-"""
+                """
 
     response = client.chat.completions.create(
         model=model, messages=[{"role": "user", "content": prompt}]
