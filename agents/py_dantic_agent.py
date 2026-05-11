@@ -1,79 +1,22 @@
 import os
-from typing import Dict, Any
-from django.conf import settings
 
 import json
-from pydantic_ai import Agent, RunContext
-from pydantic_ai.messages import (
-    FinalResultEvent,
-    FunctionToolCallEvent,
-    FunctionToolResultEvent,
-    PartDeltaEvent,
-    PartStartEvent,
-    TextPartDelta,
-    ThinkingPartDelta,
-    ToolCallPartDelta,
-)
-from pydantic_ai import Agent, FunctionToolset
-
-
-from pydantic_ai.models.openai import OpenAIChatModel
-from pydantic_ai.providers.openai import OpenAIProvider
+from pydantic_ai import Agent
+from pydantic_ai.messages import FinalResultEvent,FunctionToolCallEvent,FunctionToolResultEvent,PartDeltaEvent,PartStartEvent,TextPartDelta,ThinkingPartDelta,ToolCallPartDelta
+from pydantic_ai import Agent
 
 from constants.metabase_request_schemas import MetabaseAgentRequest
 from constants.prompt import SYSTEM_PROMPT
 from tools.chart_tools import get_chart_or_dashboard_image
-from tools.schema_tools import (
-    get_database_schema,
-    get_sample_data_from_viewing_context,
-    get_table_schema_metadata,
-)
-from tools.sql_fixing_tools import (
-    display_fixed_sql_in_editor,
-    get_quey_data_to_fix_from_sql_error,
-)
-from tools.user_helper_tools import (
-    current_user_viewing_context,
-    get_chart_generation_schema_sample,
-    navigate_user_to_view_chart,
-    get_user_details_and_current_time,
-    get_messages_history,
-    current_user_chart_configs,
-)
+from tools.schema_tools import get_database_schema,get_sample_data_from_viewing_context,get_table_schema_metadata
+from tools.sql_fixing_tools import display_fixed_sql_in_editor,get_quey_data_to_fix_from_sql_error
+from tools.user_helper_tools import current_user_viewing_context,get_chart_generation_schema_sample,navigate_user_to_view_chart,get_user_details_and_current_time,get_messages_history,current_user_chart_configs
 from utils.logging import metabase_agent_logging
-from django.conf import settings
-from utils.message_history import (
-    save_new_conversation,
-    get_all_messages,
-)
+from utils.message_history import save_new_conversation,get_all_messages
+from utils.model_provider import get_model_provider
 
 logging = metabase_agent_logging()
-
-if settings.OPENAI_API_KEY is not None:
-    logging.info("OPENAI_API_KEY is  set in environment variables.")
-    setattr(settings, 'USING_DEEPSEEK', False)
-    model = OpenAIChatModel(
-        "gpt-4o", provider=OpenAIProvider(api_key=settings.OPENAI_API_KEY)
-    )
-elif settings.DEEPSEEK_API_KEY is not None:
-    logging.info("DEEPSEEK_API_KEY is  set in environment variables.")
-    setattr(settings, 'USING_DEEPSEEK', True)
-    model = OpenAIChatModel(
-        model_name="deepseek-chat",
-        provider=OpenAIProvider(api_key=settings.DEEPSEEK_API_KEY, base_url="https://api.deepseek.com/v1"),
-    )    
-else:
-    logging.error(
-        "No API key found in environment variables. Please set OPENAI_API_KEY or DEEPSEEK_API_KEY."
-    )
-    raise ValueError(
-        "No API key found in environment variables. Please set OPENAI_API_KEY or DEEPSEEK_API_KEY."
-    )
-
-if getattr(settings, 'USING_DEEPSEEK', False) and not settings.GROQ_API_KEY:
-    raise ValueError(
-        "USING_DEEPSEEK is set to True but no GROQ_API_KEY found in environment variables. Please set GROQ_API_KEY as we use it for making calls to deepseek model for image analysis."
-    )
+model = get_model_provider()
 
 
 tool_sets = [get_table_schema_metadata,navigate_user_to_view_chart , get_sample_data_from_viewing_context , get_user_details_and_current_time ,
@@ -92,7 +35,6 @@ analytics_agent = Agent(
 async def analytics_steaming_agent(user_data: MetabaseAgentRequest):
 
     # Create a queue for the event_stream_handler to push wire-format lines into.
-
     try:
 
         message_history = await get_all_messages(user_data.conversation_id)
