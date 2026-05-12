@@ -11,13 +11,15 @@ logging = metabase_agent_logging()
 def get_model_provider():
     timeout = httpx.Timeout(30.0, read=300.0)
 
+
     if settings.OPENAI_API_KEY is not None:
         logging.info("OPENAI_API_KEY is  set in environment variables.")
         setattr(settings, 'USING_DEEPSEEK', False)
         return OpenAIChatModel(
-            "gpt-4o",
+            settings.OPEN_AI_MODEL_NAME,
             provider=OpenAIProvider(
                 api_key=settings.OPENAI_API_KEY,
+                base_url=settings.OPEN_AI_BASE_URL,
                 http_client=httpx.AsyncClient(timeout=timeout),
             ),
         )

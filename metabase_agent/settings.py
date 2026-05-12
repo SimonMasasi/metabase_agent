@@ -149,6 +149,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # API Keys and External Services
 OPENAI_API_KEY = config.get("OPENAI_API_KEY", None)
+OPEN_AI_BASE_URL = config.get("OPEN_AI_BASE_URL", None)
+OPEN_AI_MODEL_NAME = config.get("OPEN_AI_MODEL_NAME", "gpt-4o")
 DEEPSEEK_API_KEY = config.get("DEEPSEEK_API_KEY", None)
 METABASE_API_KEY = config.get("METABASE_API_KEY", None)
 METABASE_BASE_URL = config.get("METABASE_BASE_URL", "http://localhost:3000")
