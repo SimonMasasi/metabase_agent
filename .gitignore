@@ -180,4 +180,4 @@ yarn.lock
 #macos
 .DS_Store
 /logs/
-/data/new_json.json
+new_json.json
