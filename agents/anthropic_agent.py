@@ -64,8 +64,20 @@ anthropic_streaming_agent = Agent(
 )
 
 
+def _get_latest_user_prompt(user_data: MetabaseAgentRequest) -> str:
+	# pydantic-ai expects a single prompt (string/message parts), not the full API message list.
+	for message in reversed(user_data.messages):
+		if message.role == "user" and message.content:
+			text_parts = [part.text for part in message.content if getattr(part, "text", None)]
+			if text_parts:
+				return "\n".join(text_parts)
+
+	return ""
+
+
 def _anthropic_sse_event(event_name, payload):
-	return f"event: {event_name}\\ndata: {json.dumps(payload)}\\n\\n"
+	# SSE frames must use real newlines; escaped "\\n" breaks downstream parsers.
+	return f"event: {event_name}\ndata: {json.dumps(payload)}\n\n"
 
 
 def _message_stop_events():
@@ -88,6 +100,7 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 	message_id = f"msg_{uuid4().hex}"
 	content_open = False
 	stop_sent = False
+	text_emitted = False
 
 	def _open_content_block_if_needed():
 		nonlocal content_open
@@ -102,6 +115,26 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 				},
 			)
 		return None
+
+	def _emit_text_delta(text):
+		nonlocal text_emitted
+		if not text:
+			return None
+		text_emitted = True
+		open_event = _open_content_block_if_needed()
+		if open_event is not None:
+			yield open_event
+		yield _anthropic_sse_event(
+			"content_block_delta",
+			{
+				"type": "content_block_delta",
+				"index": 0,
+				"delta": {
+					"type": "text_delta",
+					"text": text,
+				},
+			},
+		)
 
 	try:
 		yield _anthropic_sse_event(
@@ -126,8 +159,9 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 		max_attempts = 2
 		for attempt in range(max_attempts):
 			try:
+				user_prompt = _get_latest_user_prompt(user_data)
 				async with anthropic_streaming_agent.iter(
-					user_data.messages[0].content[0].text,
+					user_prompt=user_prompt,
 					deps=user_data,
 					message_history=message_history,
 				) as run:
@@ -151,39 +185,15 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 											logging.info(
 												f"TextPartDelta: {event.delta.content_delta}"
 											)
-											open_event = _open_content_block_if_needed()
-											if open_event is not None:
-												yield open_event
-											yield _anthropic_sse_event(
-												"content_block_delta",
-												{
-													"type": "content_block_delta",
-													"index": 0,
-													"delta": {
-														"type": "text_delta",
-														"text": event.delta.content_delta,
-													},
-												},
-											)
+											for sse_event in _emit_text_delta(event.delta.content_delta):
+												yield sse_event
 
 										elif isinstance(event.delta, ThinkingPartDelta):
 											logging.info(
 												f"ThinkingPartDelta: {event.delta.content_delta}"
 											)
-											open_event = _open_content_block_if_needed()
-											if open_event is not None:
-												yield open_event
-											yield _anthropic_sse_event(
-												"content_block_delta",
-												{
-													"type": "content_block_delta",
-													"index": 0,
-													"delta": {
-														"type": "text_delta",
-														"text": event.delta.content_delta,
-													},
-												},
-											)
+											for sse_event in _emit_text_delta(event.delta.content_delta):
+												yield sse_event
 
 										elif isinstance(event.delta, ToolCallPartDelta):
 											logging.info(
@@ -204,20 +214,8 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 										)
 										previous_text = output
 										if current_text:
-											open_event = _open_content_block_if_needed()
-											if open_event is not None:
-												yield open_event
-											yield _anthropic_sse_event(
-												"content_block_delta",
-												{
-													"type": "content_block_delta",
-													"index": 0,
-													"delta": {
-														"type": "text_delta",
-														"text": current_text,
-													},
-												},
-											)
+											for sse_event in _emit_text_delta(current_text):
+												yield sse_event
 
 						elif Agent.is_call_tools_node(node):
 							logging.info(
@@ -240,6 +238,10 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 							logging.info(
 								f"=== EndNode: Agent run complete with output: {run.result.output} ==="
 							)
+							if not text_emitted:
+								final_text = str(run.result.output or "")
+								for sse_event in _emit_text_delta(final_text):
+									yield sse_event
 							all_messages = run.result.new_messages_json().decode()
 							await save_new_conversation(user_data.conversation_id, all_messages)
 							open_event = _open_content_block_if_needed()

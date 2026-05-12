@@ -1,3 +1,5 @@
+import json
+
 from django.http import StreamingHttpResponse
 from ninja import Router
 
@@ -33,6 +35,11 @@ def get_models(request):
 
 @anthropic_router.post("/v1/messages")
 def get_messages(request, input_data: MetabaseAgentRequest):
+
+    #save the input_data in the folder /data in the file new_json.json for debugging purposes
+    with open("data/new_json.json", "w") as f:
+        json.dump(input_data.model_dump(), f, indent=4)
+
     return StreamingHttpResponse(
         streaming_content=anthropic_streaming_agent_runner(input_data),
         content_type="text/event-stream",
