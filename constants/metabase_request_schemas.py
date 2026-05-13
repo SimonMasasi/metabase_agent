@@ -43,10 +43,15 @@ class Message(BaseModel):
 
 class MetabaseAgentRequest(BaseModel):
     messages: List[Message]
-    model: str
+    model: str ="gpt-4o"
+    stream: bool = True
+    temperature: Optional[float] = 0.7
+    max_tokens: Optional[int] = 2048
+    tool_choice: Optional[dict] = None
+    tools: Optional[List[Any]] = None
     context: Optional[UserContext] = None
-    state: Dict = Field(default={})
-    system:str
+    state: Dict = {}
+    system:str = ""
     # history: List = Field( default=[])
     user_id: Optional[int] = None
     conversation_id: str = "contersation_id_not_provided"

@@ -16,7 +16,7 @@ from pydantic_ai.messages import (
 
 from constants.metabase_request_schemas import MetabaseAgentRequest
 from constants.prompt import SYSTEM_PROMPT
-from tools.chart_tools import get_chart_or_dashboard_image
+from tools.chart_tools import get_chart_or_dashboard_image, structured_output
 from tools.schema_tools import (
 	get_database_schema,
 	get_sample_data_from_viewing_context,
@@ -54,6 +54,7 @@ tool_sets = [
 	current_user_chart_configs,
 	get_messages_history,
 	display_fixed_sql_in_editor,
+	structured_output
 ]
 
 anthropic_streaming_agent = Agent(
@@ -62,6 +63,45 @@ anthropic_streaming_agent = Agent(
 	system_prompt=SYSTEM_PROMPT,
 	tools=tool_sets,
 )
+
+
+def _extract_json_from_text(text: str) -> dict | None:
+	if not text:
+		return None
+
+	candidate = text.strip()
+	if candidate.startswith("```"):
+		lines = candidate.splitlines()
+		if lines and lines[0].startswith("```"):
+			lines = lines[1:]
+		if lines and lines[-1].strip() == "```":
+			lines = lines[:-1]
+		candidate = "\n".join(lines).strip()
+
+	try:
+		parsed = json.loads(candidate)
+		if isinstance(parsed, dict):
+			return parsed
+	except Exception:
+		return None
+
+	return None
+
+
+def _requested_structured_tool_name(user_data: MetabaseAgentRequest) -> str | None:
+	tool_choice = user_data.tool_choice or {}
+	if isinstance(tool_choice, dict):
+		name = tool_choice.get("name")
+		if isinstance(name, str) and name.strip():
+			return name.strip()
+
+	for tool in user_data.tools or []:
+		if isinstance(tool, dict):
+			name = tool.get("name")
+			if isinstance(name, str) and name.strip().lower() == "structured_output":
+				return name.strip()
+
+	return None
 
 
 def _get_latest_user_prompt(user_data: MetabaseAgentRequest) -> str:
@@ -80,20 +120,77 @@ def _anthropic_sse_event(event_name, payload):
 	return f"event: {event_name}\ndata: {json.dumps(payload)}\n\n"
 
 
-def _message_stop_events():
-	yield _anthropic_sse_event(
-		"content_block_stop",
-		{"type": "content_block_stop", "index": 0},
-	)
+def _message_stop_events(stop_reason: str = "end_turn", include_content_block_stop: bool = True):
+	if include_content_block_stop:
+		yield _anthropic_sse_event(
+			"content_block_stop",
+			{"type": "content_block_stop", "index": 0},
+		)
 	yield _anthropic_sse_event(
 		"message_delta",
 		{
 			"type": "message_delta",
-			"delta": {"stop_reason": "end_turn", "stop_sequence": None},
+			"delta": {"stop_reason": stop_reason, "stop_sequence": None},
 			"usage": {"output_tokens": 0},
 		},
 	)
 	yield _anthropic_sse_event("message_stop", {"type": "message_stop"})
+
+
+def _extract_structured_tool_payload(
+	run_output,
+	buffered_text: str,
+	structured_tool_name: str,
+) -> dict | None:
+	if isinstance(run_output, dict):
+		return run_output
+
+	if isinstance(run_output, list) and structured_tool_name == "structured_output":
+		if all(isinstance(item, str) for item in run_output):
+			return {"questions": run_output}
+
+	if isinstance(run_output, str):
+		parsed = _extract_json_from_text(run_output)
+		if isinstance(parsed, dict):
+			return parsed
+
+	if hasattr(run_output, "model_dump"):
+		try:
+			dumped = run_output.model_dump()
+			if isinstance(dumped, dict):
+				return dumped
+		except Exception:
+			pass
+
+	parsed_from_text = _extract_json_from_text(buffered_text)
+	if isinstance(parsed_from_text, dict):
+		return parsed_from_text
+
+	# Last-resort fallback for strict structured callers expecting a tool call.
+	if structured_tool_name == "structured_output":
+		return {"questions": []}
+
+	return None
+
+
+def _coerce_tool_args_to_dict(raw_args) -> dict:
+	if isinstance(raw_args, dict):
+		return raw_args
+
+	if hasattr(raw_args, "model_dump"):
+		try:
+			dumped = raw_args.model_dump()
+			if isinstance(dumped, dict):
+				return dumped
+		except Exception:
+			pass
+
+	if isinstance(raw_args, str):
+		parsed = _extract_json_from_text(raw_args)
+		if isinstance(parsed, dict):
+			return parsed
+
+	return {}
 
 
 async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
@@ -101,6 +198,10 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 	content_open = False
 	stop_sent = False
 	text_emitted = False
+	tool_use_emitted = False
+	structured_tool_name = _requested_structured_tool_name(user_data)
+	structured_mode = structured_tool_name is not None
+	buffered_text = ""
 
 	def _open_content_block_if_needed():
 		nonlocal content_open
@@ -117,8 +218,11 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 		return None
 
 	def _emit_text_delta(text):
-		nonlocal text_emitted
+		nonlocal text_emitted, buffered_text
 		if not text:
+			return None
+		if structured_mode:
+			buffered_text += text
 			return None
 		text_emitted = True
 		open_event = _open_content_block_if_needed()
@@ -134,6 +238,39 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 					"text": text,
 				},
 			},
+		)
+
+	def _emit_tool_use_content_block(tool_name: str, tool_input: dict, index: int = 0):
+		nonlocal tool_use_emitted
+		tool_use_emitted = True
+		tool_input = tool_input or {}
+		yield _anthropic_sse_event(
+			"content_block_start",
+			{
+				"type": "content_block_start",
+				"index": index,
+				"content_block": {
+					"type": "tool_use",
+					"id": f"toolu_{uuid4().hex}",
+					"name": tool_name,
+					"input": {},
+				},
+			},
+		)
+		yield _anthropic_sse_event(
+			"content_block_delta",
+			{
+				"type": "content_block_delta",
+				"index": index,
+				"delta": {
+					"type": "input_json_delta",
+					"partial_json": json.dumps(tool_input),
+				},
+			},
+		)
+		yield _anthropic_sse_event(
+			"content_block_stop",
+			{"type": "content_block_stop", "index": index},
 		)
 
 	try:
@@ -185,15 +322,16 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 											logging.info(
 												f"TextPartDelta: {event.delta.content_delta}"
 											)
-											for sse_event in _emit_text_delta(event.delta.content_delta):
+											for sse_event in _emit_text_delta(event.delta.content_delta) or []:
 												yield sse_event
 
 										elif isinstance(event.delta, ThinkingPartDelta):
 											logging.info(
 												f"ThinkingPartDelta: {event.delta.content_delta}"
 											)
-											for sse_event in _emit_text_delta(event.delta.content_delta):
-												yield sse_event
+											if not structured_mode:
+												for sse_event in _emit_text_delta(event.delta.content_delta):
+													yield sse_event
 
 										elif isinstance(event.delta, ToolCallPartDelta):
 											logging.info(
@@ -214,7 +352,7 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 										)
 										previous_text = output
 										if current_text:
-											for sse_event in _emit_text_delta(current_text):
+											for sse_event in _emit_text_delta(current_text) or []:
 												yield sse_event
 
 						elif Agent.is_call_tools_node(node):
@@ -227,6 +365,10 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 										logging.info(
 											f"[Tools] Calling tool {event.part.tool_name}({event.part.args}) with call ID {event.tool_call_id!r}"
 										)
+										if structured_mode and event.part.tool_name == (structured_tool_name or "structured_output"):
+											tool_args = _coerce_tool_args_to_dict(event.part.args)
+											for sse_event in _emit_tool_use_content_block(event.part.tool_name, tool_args):
+												yield sse_event
 									elif isinstance(event, FunctionToolResultEvent):
 										logging.info(
 											f"[Tools] Tool call {event.tool_call_id!r} returned => {event.result.has_content()}"
@@ -240,14 +382,30 @@ async def anthropic_streaming_agent_runner(user_data: MetabaseAgentRequest):
 							)
 							if not text_emitted:
 								final_text = str(run.result.output or "")
-								for sse_event in _emit_text_delta(final_text):
+								for sse_event in _emit_text_delta(final_text) or []:
 									yield sse_event
+
+							if structured_mode and not tool_use_emitted:
+								tool_payload = _extract_structured_tool_payload(
+									run.result.output,
+									buffered_text,
+									structured_tool_name or "structured_output",
+								)
+								if isinstance(tool_payload, dict):
+									for sse_event in _emit_tool_use_content_block(
+										structured_tool_name or "structured_output", tool_payload
+									):
+										yield sse_event
 							all_messages = run.result.new_messages_json().decode()
 							await save_new_conversation(user_data.conversation_id, all_messages)
-							open_event = _open_content_block_if_needed()
-							if open_event is not None:
-								yield open_event
-							for stop_event in _message_stop_events():
+							if not tool_use_emitted:
+								open_event = _open_content_block_if_needed()
+								if open_event is not None:
+									yield open_event
+							for stop_event in _message_stop_events(
+								"tool_use" if tool_use_emitted else "end_turn",
+								include_content_block_stop=not tool_use_emitted,
+							):
 								yield stop_event
 							stop_sent = True
 							break

@@ -110,3 +110,19 @@ async def get_chart_or_dashboard_image(
         logging.error(f"Error Occurred  Failed To Fetch Image Chart or Dashboard {e}")
 
         return NO_IMAGE_FOUND
+
+
+
+async def structured_output(
+    ctx: RunContext[MetabaseAgentRequest],
+    questions: list[str] | None = None,
+    questions_list: list[str] | None = None,
+) -> dict:
+
+    resolved_questions = questions if questions is not None else (questions_list or [])
+    response = {
+        "questions": resolved_questions
+    }
+
+    return response
+    
