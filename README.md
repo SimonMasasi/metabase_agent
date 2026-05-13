@@ -1,368 +1,218 @@
-# Metabase Helpers
+# Metabase Agent
 
-A Django application that provides helper tools for working with Metabase. This project includes various utilities for SQL generation, chart analysis, metrics, and agent-based interactions.
+Metabase Agent is a Django + Ninja API service that powers AI-assisted Metabase workflows.
 
-## Project Structure
+It currently includes:
 
-```
-metabase_agent/
-├── metabase_agent_helper/      # Agent-based helper functionality
-├── metabase_analyzer_helper/   # Analysis tools
-├── metabase_metrics_helper/    # Metrics utilities
-├── metabase_sql_helper/        # SQL generation tools
-├── tools/                      # Core utility tools
-├── utils/                      # Helper utilities
-├── views/                      # API views (v1 and v2)
-├── constants/                  # Application constants
-├── data/                       # Data files
-└── notebooks/                  # Jupyter notebooks
-```
+- v1 helper APIs for image analysis and SQL generation/fixing.
+- v2 conversational agent APIs (streaming and non-streaming).
+- v2 dashboard analysis APIs (streaming and non-streaming).
+- license and model compatibility endpoints used by Metabase integrations.
 
-## Prerequisites
+## Architecture Overview
 
-- Python 3.11+
-- PostgreSQL (optional, SQLite is used by default)
-- Docker (for containerized deployment)
+Main folders:
 
-## Running the Project
+- metabase_agent: Django project settings and root URLs.
+- views: HTTP endpoints split by API version.
+- agents: LLM and streaming agent logic.
+- tools: tool functions used by agent workflows.
+- utils: shared API clients, logging, model provider, and message history.
+- constants: schemas, prompts, and API constants.
+- docs: endpoint-specific docs and examples.
+- data: sample requests and debug payloads.
 
-### Method 1: Docker (Recommended)
+## Requirements
 
-#### Development with Docker
+- Python 3.12 recommended (matches container runtime).
+- uv package manager.
+- Docker and Docker Compose (optional, for containerized runs).
+- PostgreSQL optional (SQLite is default when DB_DRIVER is not pg).
 
-1. **Clone the repository**
+## Quick Start (Local)
 
-   ```bash
-   git clone <repository-url>
-   cd metabase_agent
-   ```
-
-2. **Copy environment file**
-
-   ```bash
-   cp env.example .env
-   ```
-
-3. **Edit environment variables** (optional)
-
-   ```bash
-   nano .env
-   ```
-
-   Example `.env` configuration:
-
-   ```env
-   SECRET_KEY=your-secret-key-here
-   DEBUG=True
-   DB_DRIVER=sqlite  # or 'pg' for PostgreSQL
-   ```
-
-4. **Build and run with Docker Compose**
-
-   ```bash
-   docker-compose up --build
-   ```
-
-5. **Access the application**
-   - Application: http://localhost:8000
-   - Admin panel: http://localhost:8000/admin/
-
-#### Production with Docker
-
-1. **Set up production environment**
-
-   ```bash
-   cp env.example .env
-   ```
-
-2. **Configure production settings**
-
-   ```bash
-   nano .env
-   ```
-
-   Example production `.env`:
-
-   ```env
-   SECRET_KEY=your-very-secure-secret-key
-   DEBUG=False
-   DB_DRIVER=pg
-   DATABASE_NAME=metabase_agent
-   DATABASE_USER=your_db_user
-   DATABASE_PASSWORD=your_secure_password
-   DATABASE_HOST=db
-   DATABASE_PORT=5432
-   ```
-
-3. **Run production setup**
-
-   ```bash
-   docker-compose -f docker-compose.prod.yml up --build -d
-   ```
-
-4. **Access the application**
-   - Application: http://localhost (port 80)
-   - The setup includes nginx as a reverse proxy
-
-### Method 2: Local Development (Traditional)
-
-#### Prerequisites Setup
-
-1. **Install native system dependencies**
-
-   Ubuntu/Debian:
-
-   ```bash
-   sudo apt update
-   sudo apt install -y libvips42 libcairo2 pkg-config
-   ```
-
-   macOS (Homebrew):
-
-   ```bash
-   brew install vips cairo pkg-config
-   ```
-
-2. **Install Python dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp env.example .env
-   nano .env  # Edit with your settings
-   ```
-
-#### Database Setup
-
-**Option A: SQLite (Default)**
+1. Install dependencies with uv.
 
 ```bash
-python manage.py migrate
+uv sync
 ```
 
-**Option B: PostgreSQL**
+2. Create a .env file in the project root.
 
-1. Install PostgreSQL and create a database:
+```env
+SECRET_KEY=replace-with-a-secure-value
+DEBUG=True
 
-   ```sql
-   CREATE DATABASE metabase_agent;
-   CREATE USER your_user WITH PASSWORD 'your_password';
-   GRANT ALL PRIVILEGES ON DATABASE metabase_agent TO your_user;
-   ```
+# LLM provider (set at least one)
+OPENAI_API_KEY=
+DEEPSEEK_API_KEY=
 
-2. Update your `.env` file:
+# Optional model/provider overrides
+OPEN_AI_BASE_URL=
+OPEN_AI_MODEL_NAME=gpt-4o
+GROQ_API_KEY=
 
-   ```env
-   DB_DRIVER=pg
-   DATABASE_NAME=metabase_agent
-   DATABASE_USER=your_user
-   DATABASE_PASSWORD=your_password
-   DATABASE_HOST=localhost
-   DATABASE_PORT=5432
-   ```
+# Metabase integration
+METABASE_API_KEY=
+METABASE_BASE_URL=http://localhost:3000
 
-3. Run migrations:
-   ```bash
-   python manage.py migrate
-   ```
+# Database
+DB_DRIVER=sqlite
+DATABASE_NAME=
+DATABASE_USER=
+DATABASE_PASSWORD=
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+```
 
-#### Running the Development Server
-
-**Option A: Using Django's development server**
+3. Run migrations.
 
 ```bash
-python manage.py runserver
+uv run python manage.py migrate
 ```
 
-**Option B: Using Daphne (ASGI server)**
+4. Start the server.
 
 ```bash
-daphne -b 0.0.0.0 -p 8000 metabase_agent.asgi:application
+uv run python manage.py runserver 0.0.0.0:8000
 ```
 
-**Option C: Using Uvicorn**
+5. Open docs and admin.
+
+- API v1 docs: http://localhost:8000/api/v1/docs
+- API v2 docs: http://localhost:8000/api/v2/docs
+- Django admin: http://localhost:8000/admin
+
+## Docker
+
+Development compose:
 
 ```bash
-uvicorn metabase_agent.asgi:application --host 0.0.0.0 --port 8000 --reload
+docker-compose up --build
 ```
 
-#### Creating a Superuser
+- Web app: http://localhost:8000
+- Postgres: localhost:5432
+
+Production-like compose:
 
 ```bash
-python manage.py createsuperuser
+docker-compose -f docker-compose.prod.yml up --build -d
 ```
 
-## API Endpoints
+- Nginx entrypoint: http://localhost:8080
+- TLS port mapping: https://localhost:8443
 
-The application provides several API endpoints:
+## API Surface
 
-- **API v1**: `/api/v1/`
+Root routes:
 
-  - Analyzer: `/api/v1/analyzer/`
-  - Metrics: `/api/v1/metrics/`
-  - SQL: `/api/v1/sql/`
+- /api/v1/
+- /api/v2/
+- /api/ (license endpoints)
+- /anthropic/ (model/message compatibility endpoints)
 
-- **API v2**: `/api/v2/`
-  - Agent: `/api/v2/agent/`
+### v1 Endpoints
 
-## Development Tools
+- POST /api/v1/analyze/chart
+- POST /api/v1/analyze/dashboard
+- POST /api/v1/sql/generate
+- POST /api/v1/sql/fix
+- POST /api/v1/select-metric/
+- POST /api/v1/find-outliers/
 
-### Running Tests
+### v2 Agent Endpoints
 
-```bash
-python manage.py test
-```
+- POST /api/v2/agent/non_stream
+- POST /api/v2/agent/stream
 
-### Collecting Static Files
+Request examples and streaming notes:
 
-```bash
-python manage.py collectstatic
-```
+- docs/agent.md
+- data/sample_agent_request.json
 
-### Database Operations
+### v2 Dashboard Endpoints
 
-```bash
-# Create migrations
-python manage.py makemigrations
+- POST /api/v2/dashboard_analysis/non_stream
+- POST /api/v2/dashboard_analysis/stream
 
-# Apply migrations
-python manage.py migrate
+Request examples and streaming notes:
 
-# Reset database (SQLite)
-rm db.sqlite3
-python manage.py migrate
-```
+- docs/dashboard-agent.md
+- data/sample_dashboard_request.json
 
-### Working with Notebooks
+### License and Compatibility Endpoints
 
-The project includes Jupyter notebooks in the `notebooks/` directory. To run them:
-
-1. Install Jupyter:
-
-   ```bash
-   pip install jupyter
-   ```
-
-2. Start Jupyter:
-   ```bash
-   jupyter notebook notebooks/
-   ```
-
-## Docker Commands Reference
-
-### Useful Docker Commands
-
-```bash
-# Build the image
-docker build -t metabase-helpers .
-
-# Run a single container
-docker run -p 8000:8000 metabase-helpers
-
-# View running containers
-docker ps
-
-# View logs
-docker-compose logs web
-
-# Execute commands in running container
-docker-compose exec web python manage.py shell
-
-# Stop all services
-docker-compose down
-
-# Remove all containers and volumes
-docker-compose down -v
-
-# Rebuild containers
-docker-compose up --build --force-recreate
-```
-
-### Database Management with Docker
-
-```bash
-# Run migrations
-docker-compose exec web python manage.py migrate
-
-# Create superuser
-docker-compose exec web python manage.py createsuperuser
-
-# Access Django shell
-docker-compose exec web python manage.py shell
-
-# Access database shell (PostgreSQL)
-docker-compose exec db psql -U postgres metabase_agent
-```
+- GET /api/{token}/v2/status
+- POST /api/{token}/v2/metering
+- GET /anthropic/v1/models
+- POST /anthropic/v1/messages
 
 ## Environment Variables
 
-| Variable            | Description                        | Default   | Required            |
-| ------------------- | ---------------------------------- | --------- | ------------------- |
-| `SECRET_KEY`        | Django secret key                  | None      | Yes                 |
-| `DEBUG`             | Enable debug mode                  | True      | No                  |
-| `OPENAI_API_KEY`    | OpenAI API key for AI features     | None      | Yes                 |
-| `METABASE_API_KEY`  | Metabase API key for integration   | None      | Yes                 |
-| `METABASE_BASE_URL` | Metabase instance base URL         | None      | Yes                 |
-| `DB_DRIVER`         | Database driver ('sqlite' or 'pg') | sqlite    | No                  |
-| `DATABASE_NAME`     | Database name                      | None      | If using PostgreSQL |
-| `DATABASE_USER`     | Database user                      | None      | If using PostgreSQL |
-| `DATABASE_PASSWORD` | Database password                  | None      | If using PostgreSQL |
-| `DATABASE_HOST`     | Database host                      | localhost | If using PostgreSQL |
-| `DATABASE_PORT`     | Database port                      | 5432      | If using PostgreSQL |
+Core variables:
+
+- SECRET_KEY: Django secret key.
+- DEBUG: true or false.
+- OPENAI_API_KEY: primary OpenAI key.
+- DEEPSEEK_API_KEY: optional alternative provider key.
+- OPEN_AI_BASE_URL: optional custom OpenAI-compatible endpoint.
+- OPEN_AI_MODEL_NAME: defaults to gpt-4o.
+- METABASE_API_KEY: Metabase API key used by tool calls.
+- METABASE_BASE_URL: Metabase base URL.
+
+Database variables (used when DB_DRIVER=pg):
+
+- DATABASE_NAME
+- DATABASE_USER
+- DATABASE_PASSWORD
+- DATABASE_HOST
+- DATABASE_PORT
+
+## Common Commands
+
+Run tests:
+
+```bash
+uv run python manage.py test
+```
+
+Create and apply migrations:
+
+```bash
+uv run python manage.py makemigrations
+uv run python manage.py migrate
+```
+
+Collect static files:
+
+```bash
+uv run python manage.py collectstatic --noinput
+```
+
+Tail container logs:
+
+```bash
+docker-compose logs -f web
+```
 
 ## Troubleshooting
 
-### Common Issues
+No env.example file exists in this repo, so create .env manually.
 
-1. **Port already in use**
+If model initialization fails:
 
-   ```bash
-   # Find and kill process using port 8000
-   lsof -ti:8000 | xargs kill -9
-   ```
+- Set OPENAI_API_KEY or DEEPSEEK_API_KEY.
+- Ensure OPEN_AI_BASE_URL is valid when provided.
 
-2. **Database connection issues**
+If Metabase tools fail:
 
-   - Check if PostgreSQL is running
-   - Verify database credentials in `.env`
-   - Ensure database exists
+- Verify METABASE_BASE_URL and METABASE_API_KEY.
+- Confirm your Metabase instance is reachable from this service.
 
-3. **Docker build issues**
+If database startup fails:
 
-   ```bash
-   # Clean Docker cache
-   docker system prune -a
+- Use DB_DRIVER=sqlite for local quick start.
+- For PostgreSQL, ensure all DATABASE_* vars are set correctly.
 
-   # Rebuild without cache
-   docker-compose build --no-cache
-   ```
-
-4. **Static files not loading**
-
-   ```bash
-   # Collect static files
-   python manage.py collectstatic --noinput
-   ```
-
-5. **Permission issues with Docker**
-   ```bash
-   # Fix ownership issues
-   sudo chown -R $USER:$USER .
-   ```
-
-### Logs
-
-- **Local development**: Check terminal output
-- **Docker**: `docker-compose logs web`
-- **Application logs**: Check `logs/` directory
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests
-5. Submit a pull request
+Logs are written to the logs directory with daily rotation.
