@@ -25,17 +25,7 @@ async def non_stream_dashboard_agent(request: HttpRequest , input_data: Dashboar
     """
     try:
 
-        logging.info(str(request.body))
-        logging.info(str(request.headers))
-
-
-        logging.info("received request with agent_data")
-        logging.info(input_data)
-
         answer = await dashboard_agent_non_stream(user_data=input_data)
-
-        logging.info("generated_answer")
-        logging.info(answer)
 
         # Placeholder for chart analysis logic
         return DashboardDataResponse(success=True, message="Answer generated successfully", data=answer)
