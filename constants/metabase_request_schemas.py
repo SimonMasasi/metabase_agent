@@ -18,7 +18,7 @@ class ChartConfig(BaseModel):
 
 
 class ViewingContext(BaseModel):
-    id: Optional[int] = None
+    id: Optional[str] = None
     type: str
     query: DatasetQuery | None = None
     error: Optional[str] = None

@@ -106,11 +106,19 @@ def _requested_structured_tool_name(user_data: MetabaseAgentRequest) -> str | No
 
 def _get_latest_user_prompt(user_data: MetabaseAgentRequest) -> str:
 	# pydantic-ai expects a single prompt (string/message parts), not the full API message list.
+	def _strip_metabase_context(text: str) -> str:
+		candidate = text.strip()
+		if candidate.startswith("<context>"):
+			_, has_context, remainder = candidate.partition("</context>")
+			if has_context:
+				return remainder.strip()
+		return candidate
+
 	for message in reversed(user_data.messages):
 		if message.role == "user" and message.content:
 			text_parts = [part.text for part in message.content if getattr(part, "text", None)]
 			if text_parts:
-				return "\n".join(text_parts)
+				return _strip_metabase_context("\n".join(text_parts))
 
 	return ""
 
