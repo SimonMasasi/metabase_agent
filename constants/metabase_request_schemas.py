@@ -54,7 +54,7 @@ class MetabaseAgentRequest(BaseModel):
     system:str = ""
     # history: List = Field( default=[])
     user_id: Optional[int] = None
-    conversation_id: str = "contersation_id_not_provided"
+    conversation_id: str = ""
 
 class DashboardDetails(BaseModel):
     name: str

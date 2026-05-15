@@ -113,7 +113,7 @@ async def get_chart_or_dashboard_image(
 
 
 
-async def structured_output(
+async def v(
     ctx: RunContext[MetabaseAgentRequest],
     questions: list[str] | None = None,
     questions_list: list[str] | None = None,
